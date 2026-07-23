@@ -1,7 +1,8 @@
 import Intro from "@/components/Intro";
+import MusicPlayer from "@/components/MusicPlayer";
 
 import Hero from "@/components/sections/Hero";
-import Countdown from "@/components/Countdown";
+import Countdown from "@/components/sections/Countdown";
 import Details from "@/components/sections/Details";
 import Schedule from "@/components/sections/Schedule";
 import Venue from "@/components/sections/Venue";
@@ -12,28 +13,30 @@ import Footer from "@/components/sections/Footer";
 
 export default function Home() {
   return (
-    <main className="overflow-hidden">
-
+    <>
       <Intro />
 
-      <Hero />
+      <main className="overflow-x-hidden bg-[#FCFBF8] text-neutral-800">
+        <Hero />
 
-      <Countdown />
+        <Countdown />
 
-      <Details />
+        <Details />
 
-      <Schedule />
+        <Schedule />
 
-      <Venue />
+        <Venue />
 
-      <RSVP />
+        <RSVP />
 
-      <Gallery />
+        <Gallery />
 
-      <Instagram />
+        <Instagram />
 
-      <Footer />
+        <Footer />
+      </main>
 
-    </main>
+      <MusicPlayer />
+    </>
   );
 }
