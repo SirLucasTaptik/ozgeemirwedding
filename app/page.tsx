@@ -1,5 +1,6 @@
 import Intro from "@/components/Intro";
 import Loader from "@/components/Loader";
+import MobileNav from "@/components/MobileNav";
 import MusicPlayer from "@/components/MusicPlayer";
 import ScrollProgress from "@/components/ScrollProgress";
 import MouseGlow from "@/components/MouseGlow";
@@ -25,6 +26,9 @@ export default function Home() {
       {/* Initial Loader */}
       <Loader />
 
+      {/* Mobile Navigation */}
+      <MobileNav />
+
       {/* Scroll Progress */}
       <ScrollProgress />
 
@@ -32,7 +36,6 @@ export default function Home() {
       <MouseGlow />
 
       <main className="relative overflow-x-hidden bg-[#FCFBF8] text-neutral-800">
-
         <Hero />
 
         <Countdown />
@@ -52,7 +55,6 @@ export default function Home() {
         <Instagram />
 
         <Footer />
-
       </main>
 
       {/* Floating Music Button */}
