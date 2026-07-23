@@ -1,42 +1,38 @@
 import Intro from "@/components/Intro";
-import Hero from "@/components/Hero";
+
+import Hero from "@/components/sections/Hero";
+import Countdown from "@/components/Countdown";
+import Details from "@/components/sections/Details";
+import Schedule from "@/components/sections/Schedule";
+import Venue from "@/components/sections/Venue";
+import RSVP from "@/components/sections/RSVP";
+import Gallery from "@/components/sections/Gallery";
+import Instagram from "@/components/sections/Instagram";
+import Footer from "@/components/sections/Footer";
 
 export default function Home() {
   return (
     <main className="overflow-hidden">
+
       <Intro />
 
       <Hero />
 
-      {/* Countdown */}
-      <section id="countdown"></section>
+      <Countdown />
 
-      {/* Story */}
-      <section id="story"></section>
+      <Details />
 
-      {/* Schedule */}
-      <section id="schedule"></section>
+      <Schedule />
 
-      {/* Couple */}
-      <section id="couple"></section>
+      <Venue />
 
-      {/* Venue */}
-      <section id="venue"></section>
+      <RSVP />
 
-      {/* RSVP */}
-      <section id="rsvp"></section>
+      <Gallery />
 
-      {/* Gallery */}
-      <section id="gallery"></section>
+      <Instagram />
 
-      {/* Weather */}
-      <section id="weather"></section>
-
-      {/* Instagram */}
-      <section id="instagram"></section>
-
-      {/* Footer */}
-      <section id="footer"></section>
+      <Footer />
 
     </main>
   );
