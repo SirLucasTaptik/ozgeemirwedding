@@ -1,43 +1,202 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
-import "./globals.css";
+@import "tailwindcss";
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-heading",
-});
+:root {
+  --background: #fcfbf8;
+  --foreground: #222222;
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-body",
-});
+  --gold: #b89b5e;
+  --gold-light: #e5cf99;
+  --gold-dark: #8b6a32;
 
-export const metadata: Metadata = {
-  title: "Özge & Emir | Wedding Invitation",
-  description:
-    "We would be honored to celebrate our happiest day with you.",
-  icons: {
-    icon: "/favicon.ico",
-  },
-  openGraph: {
-    title: "Özge & Emir",
-    description:
-      "We would be honored to celebrate our happiest day with you.",
-    type: "website",
-  },
-};
+  --cream: #f8f5ef;
+  --ivory: #fcfbf8;
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body className={`${cormorant.variable} ${inter.variable}`}>
-        {children}
-      </body>
-    </html>
+  --radius: 28px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--gold);
+  color: white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+section {
+  position: relative;
+}
+
+/* ---------- reusable ---------- */
+
+.gold {
+  color: var(--gold);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+  box-shadow:
+    0 15px 60px rgba(0, 0, 0, .05),
+    inset 0 1px rgba(255,255,255,.5);
+}
+
+.gold-gradient {
+  background: linear-gradient(
+    135deg,
+    #8b6a32,
+    #e5cf99,
+    #b89b5e
   );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-shadow {
+  text-shadow:
+    0 5px 30px rgba(0,0,0,.08);
+}
+
+/* ---------- scrollbar ---------- */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f6f3ec;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
+}
+
+/* ---------- inputs ---------- */
+
+input,
+textarea,
+select {
+  transition: .25s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+/* ---------- animations ---------- */
+
+@keyframes float {
+
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes fadeUp {
+
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGold {
+
+  0% {
+    box-shadow: 0 0 0 rgba(184,155,94,.15);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(184,155,94,.35);
+  }
+
+  100% {
+    box-shadow: 0 0 0 rgba(184,155,94,.15);
+  }
+}
+
+.float {
+  animation: float 5s ease-in-out infinite;
+}
+
+.fade-up {
+  animation: fadeUp .8s ease forwards;
+}
+
+.pulse-gold {
+  animation: pulseGold 2.5s infinite;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 768px) {
+
+  html {
+    font-size: 15px;
+  }
+
+  h1 {
+    line-height: 1.05;
+  }
+
+  .glass {
+    border-radius: 22px;
+  }
 }
