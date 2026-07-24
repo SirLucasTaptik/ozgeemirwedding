@@ -1,32 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap");
+
+/* -----------------------------------------------------------------
+   ÖZGE & EMİR — wedding invitation
+   Design tokens (matches the reference: photographic hero, warm gold
+   letter-spaced serif titles on cream/ivory, thin gold rules)
+------------------------------------------------------------------ */
+:root {
+  --ivory: #faf6ef;
+  --ivory-deep: #f2ebdc;
+  --gold: #9c7c3f;
+  --gold-light: #c9a66b;
+  --gold-pale: #e4d3ab;
+  --ink: #2b2620;
+  --rule: #e6dcc8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display serif used for the couple's names and section headlines */
+.font-display {
+  font-family: "Cormorant Garamond", serif;
+}
+
+/* Thin gold hairline divider used between sections */
+.rule-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-light) 20%,
+    var(--gold-light) 80%,
+    transparent
+  );
+}
+
+/* Ornamental flourish divider (small centered mark) */
+.flourish {
+  color: var(--gold);
+  opacity: 0.85;
+}
+
+/* Fine paper-grain texture — adds a tactile, printed-invitation feel */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Solid gold button with a slow shimmer sweep on hover */
 .btn-gold {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 32px;
-  border-radius: 9999px;
-  background: #b89b5e;
-  color: white;
-  font-weight: 500;
-  transition: .3s;
+  background: linear-gradient(100deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+  background-size: 220% 100%;
+  background-position: 0% 0%;
+  color: #fff;
+  transition: background-position 0.7s ease, letter-spacing 0.35s ease;
 }
-
 .btn-gold:hover {
-  background: #a58547;
+  background-position: 100% 0%;
+  letter-spacing: 0.22em;
 }
 
-.btn-outline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 32px;
-  border-radius: 9999px;
-  border: 1px solid #b89b5e;
-  color: #b89b5e;
-  font-weight: 500;
-  transition: .3s;
+/* Outlined gold button that fills on hover */
+.btn-outline-gold {
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  transition: background 0.45s ease, color 0.45s ease, letter-spacing 0.35s ease;
+}
+.btn-outline-gold:hover {
+  background: var(--gold);
+  color: #fff;
+  letter-spacing: 0.24em;
 }
 
-.btn-outline:hover {
-  background: #b89b5e;
-  color: white;
+/* Underline-style input used across the RSVP form */
+.field-underline {
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  transition: border-color 0.35s ease;
+}
+.field-underline:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+::selection {
+  background: var(--gold-pale);
+  color: var(--ink);
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
