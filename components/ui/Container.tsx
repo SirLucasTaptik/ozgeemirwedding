@@ -1,10 +1,16 @@
 type Props = {
   children: React.ReactNode;
+  className?: string;
 };
 
-export default function Container({ children }: Props) {
+export default function Container({
+  children,
+  className = "",
+}: Props) {
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 lg:px-10">
+    <div
+      className={`mx-auto w-full max-w-7xl px-6 lg:px-10 ${className}`}
+    >
       {children}
     </div>
   );
