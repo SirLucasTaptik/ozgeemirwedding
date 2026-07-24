@@ -6,6 +6,11 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://ozgeemir.com/sitemap.xml",
+
+    sitemap:
+      "https://ozgeemirwedding.com.tr/sitemap.xml",
+
+    host:
+      "https://ozgeemirwedding.com.tr",
   };
 }
