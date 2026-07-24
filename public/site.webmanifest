@@ -2,14 +2,21 @@
   "name": "Özge & Emir Wedding",
   "short_name": "Wedding",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#FCFBF8",
   "theme_color": "#B89B5E",
+  "description": "Wedding Invitation",
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "48x48",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ]
 }
