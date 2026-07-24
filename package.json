@@ -13,6 +13,8 @@
     "next": "^15.4.5",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
+    "tailwindcss": "^4",
+"@tailwindcss/postcss": "^4"
   },
   "devDependencies": {
     "lucide-react": "^0.400.0",
