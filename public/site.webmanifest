@@ -1,0 +1,15 @@
+{
+  "name": "Özge & Emir Wedding",
+  "short_name": "Wedding",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FCFBF8",
+  "theme_color": "#B89B5E",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
