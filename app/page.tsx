@@ -98,9 +98,9 @@ function ZambakMuhru({ boyut = 96 }: { boyut?: number }) {
       <g className="muhur-zambak" transform="translate(0 4) scale(0.62)">
         {zambakCicegi(1)}
       </g>
-      {/* mührün çevresini dolanan inci dizisi */}
-      {Array.from({ length: 16 }, (_, i) => (
-        <circle key={`i${i}`} className="mg-inci" cx="0" cy="-40" r="3.4" transform={`rotate(${i * 22.5})`} />
+      {/* zambağın çevresini dolanan iri inci kuşağı */}
+      {Array.from({ length: 18 }, (_, i) => (
+        <circle key={`i${i}`} className="mg-inci" cx="0" cy="-40" r="4.6" transform={`rotate(${i * 20})`} />
       ))}
     </svg>
   );
@@ -781,6 +781,16 @@ function Zarf({ onAcildi }: { onAcildi: () => void }) {
           <div className="kapak-astar" />
         </div>
 
+        {/* zarfın aralığındaki inci kopça: kapağın ucundan gövdeye bağlanan
+            ince kordon ve üzerinde gerçek bir inci */}
+        <svg className="zarf-kopca" viewBox="-30 -22 60 44" aria-hidden="true">
+          <SedefTanimi />
+          <path className="kopca-kordon" d="M-19 -13 C -13 8, 13 8, 19 -13" />
+          <path className="kopca-kordon kopca-ince" d="M-15 -14 C -10 4, 10 4, 15 -14" />
+          <circle className="kopca-inci-govde" cx="0" cy="0" r="8.6" />
+          <circle className="kopca-parlak" cx="-3" cy="-3.2" r="2.6" />
+        </svg>
+
         {/* pul ve posta damgası */}
         <div className="zarf-pul">
           <Pul />
@@ -1018,6 +1028,7 @@ function KatilimFormu() {
             aria-pressed={form.katilim === "evet"}
             onClick={() => {
               degistir("katilim", "evet");
+              // "gelemiyorum" seçilip geri dönülürse sayaç sıfırda kalmasın
               if (form.kisiSayisi < 1) degistir("kisiSayisi", 1);
             }}
           >
@@ -1037,17 +1048,30 @@ function KatilimFormu() {
         </div>
       </fieldset>
 
-      <label className="alan">
+      <div className="alan sayac-alan">
         <span className="alan-etiket">Kaç kişi katılıyorsunuz? (siz dâhil)</span>
-        <input
-          type="number"
-          min="1"
-          max="6"
-          value={form.kisiSayisi}
-          disabled={form.katilim === "hayir"}
-          onChange={(e) => degistir("kisiSayisi", Number(e.target.value))}
-        />
-      </label>
+        <div className="sayac">
+          <button
+            type="button"
+            className="sayac-dugme"
+            aria-label="Bir kişi azalt"
+            disabled={form.katilim === "hayir" || form.kisiSayisi <= 1}
+            onClick={() => degistir("kisiSayisi", Math.max(1, form.kisiSayisi - 1))}
+          >
+            −
+          </button>
+          <span className="sayac-deger">{form.katilim === "hayir" ? 0 : form.kisiSayisi}</span>
+          <button
+            type="button"
+            className="sayac-dugme"
+            aria-label="Bir kişi ekle"
+            disabled={form.katilim === "hayir" || form.kisiSayisi >= 8}
+            onClick={() => degistir("kisiSayisi", Math.min(8, form.kisiSayisi + 1))}
+          >
+            +
+          </button>
+        </div>
+      </div>
 
       <label className="alan">
         <span className="alan-etiket">Çifte notunuz (isteğe bağlı)</span>
@@ -1415,32 +1439,32 @@ const CSS_METNI = `
 .zarf {
   position: relative; width: min(92vw, 540px); aspect-ratio: 1 / 0.7;
   transform-style: preserve-3d;
-  filter: drop-shadow(0 26px 40px rgba(120,104,76,0.24));
+  filter: drop-shadow(0 30px 46px rgba(140,122,92,0.18)) drop-shadow(0 3px 6px rgba(140,122,92,0.1));
   transition: transform 900ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .asama-3 .zarf, .asama-4 .zarf { transform: translateY(4%) scale(1.03); }
 
 /* kâğıt dokusu: ince lif çizgileri ve yumuşak ışık */
 .zarf-arka, .kanat, .kapak-yuz {
-  background-color: #F8F4EC;
+  background-color: #FFFFFF;
   background-image:
-    repeating-linear-gradient(94deg, rgba(196,182,156,0.12) 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(4deg, rgba(196,182,156,0.09) 0 1px, transparent 1px 5px),
-    linear-gradient(160deg, rgba(255,255,255,0.9), rgba(238,230,216,0.55));
+    repeating-linear-gradient(94deg, rgba(200,186,158,0.06) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(4deg, rgba(200,186,158,0.05) 0 1px, transparent 1px 6px),
+    linear-gradient(158deg, #FFFFFF 0%, #FFFFFF 46%, #FBF8F2 100%);
 }
 .zarf-arka {
   position: absolute; inset: 0; z-index: 1;
-  border: 1px solid rgba(206,192,164,0.9);
+  border: 1px solid rgba(222,211,188,0.85);
 }
 
 /* yan, alt ve üst kanatlar — gerçek bir zarfın dikiş düzeni */
 .kanat { position: absolute; inset: 0; z-index: 4; }
-.kanat-sol { clip-path: polygon(0 0, 50.4% 50%, 0 100%); filter: brightness(0.985); }
-.kanat-sag { clip-path: polygon(100% 0, 49.6% 50%, 100% 100%); filter: brightness(0.985); }
+.kanat-sol { clip-path: polygon(0 0, 50.4% 50%, 0 100%); filter: brightness(0.995); }
+.kanat-sag { clip-path: polygon(100% 0, 49.6% 50%, 100% 100%); filter: brightness(0.995); }
 .kanat-alt { clip-path: polygon(0 100.5%, 50% 49.6%, 100% 100.5%); filter: brightness(0.995); }
 .kanat::after {
   content: ''; position: absolute; inset: 0;
-  border: 1px solid rgba(206,192,164,0.75);
+  border: 1px solid rgba(226,216,195,0.85);
   clip-path: inherit;
 }
 
@@ -1453,16 +1477,39 @@ const CSS_METNI = `
   position: absolute; inset: 0; backface-visibility: hidden;
   clip-path: polygon(0 -0.5%, 100% -0.5%, 50% 62%);
 }
-.kapak-yuz { border-bottom: 1px solid rgba(206,192,164,0.7); }
+.kapak-yuz { border-bottom: 1px solid rgba(214,199,170,0.95); }
 .kapak-astar {
   transform: rotateX(180deg);
-  background-color: #FBF7EF;
+  /* astar kâğıdı: zarfın gövdesinden bir ton sıcak, çapraz kafes desenli.
+     Kapak devrildiğinde katlanma yerini gözle gösteren şey bu fark. */
+  background-color: #F6EFE0;
   background-image:
-    repeating-linear-gradient(45deg, rgba(200,186,158,0.3) 0 1px, transparent 1px 9px),
-    repeating-linear-gradient(-45deg, rgba(200,186,158,0.24) 0 1px, transparent 1px 9px);
+    radial-gradient(circle at 50% 50%, rgba(190,172,138,0.28) 1px, transparent 1.4px),
+    repeating-linear-gradient(45deg, rgba(190,172,138,0.5) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(-45deg, rgba(190,172,138,0.42) 0 1px, transparent 1px 9px),
+    linear-gradient(180deg, rgba(150,128,92,0.16) 0%, transparent 22%);
+  background-size: 9px 9px, auto, auto, auto;
 }
 .asama-2 .zarf-kapak, .asama-3 .zarf-kapak, .asama-4 .zarf-kapak {
   transform: rotateX(-168deg); z-index: 0;
+}
+
+/* zarfın aralığındaki inci kopça */
+.zarf-kopca {
+  position: absolute; z-index: 6; left: 50%; top: 62%;
+  width: clamp(46px, 12vw, 68px); height: auto;
+  transform: translate(-50%, -50%);
+  transition: opacity 420ms ease, transform 620ms ease;
+  filter: drop-shadow(0 2px 3px rgba(150,130,98,0.3));
+}
+.kopca-kordon { fill: none; stroke: rgba(214,202,178,0.95); stroke-width: 1.2; stroke-linecap: round; }
+.kopca-ince { stroke-width: 0.6; opacity: 0.7; }
+.kopca-inci-govde { fill: url(#mgInci); stroke: rgba(212,198,171,0.8); stroke-width: 0.5; }
+.kopca-parlak { fill: #FFFFFF; opacity: 0.85; }
+/* kapak açılınca kopça çözülür */
+.asama-1 .zarf-kopca { transform: translate(-50%, -46%) scale(1.06); }
+.asama-2 .zarf-kopca, .asama-3 .zarf-kopca, .asama-4 .zarf-kopca {
+  opacity: 0; transform: translate(-50%, -20%) scale(0.8) rotate(-14deg);
 }
 
 /* pul, posta damgası ve alıcı satırı */
@@ -1474,7 +1521,7 @@ const CSS_METNI = `
 .asama-2 .zarf-adres, .asama-3 .zarf-adres, .asama-4 .zarf-adres { opacity: 0; }
 
 .pul { width: 100%; height: auto; display: block; }
-.pul-zemin { fill: #FDFBF6; stroke: rgba(196,182,156,0.9); stroke-width: 0.9; stroke-dasharray: 2.6 2.6; }
+.pul-zemin { fill: #FFFFFF; stroke: rgba(196,182,156,0.9); stroke-width: 0.9; stroke-dasharray: 2.6 2.6; }
 .pul-cerceve { fill: none; stroke: rgba(196,182,156,0.85); stroke-width: 0.6; }
 .pul-yazi { fill: var(--zeytin); font-family: var(--govde-yazi); font-size: 6px; letter-spacing: 0.18em; text-anchor: middle; }
 /* pulun üzerindeki O & E madalyonu */
@@ -1543,8 +1590,8 @@ const CSS_METNI = `
 .asama-2 .muhur-buton, .asama-3 .muhur-buton, .asama-4 .muhur-buton {
   transform: translate(-50%, -30%) scale(0.7) rotate(-22deg); opacity: 0;
 }
-.muhur-zemin { fill: #FDFBF6; stroke: rgba(214,202,178,0.95); stroke-width: 1; }
-.muhur-cizgi { fill: none; stroke: rgba(214,202,178,0.8); stroke-width: 0.7; }
+.muhur-zemin { fill: #FFFFFF; stroke: rgba(222,211,188,0.9); stroke-width: 0.9; }
+.muhur-cizgi { fill: none; stroke: rgba(226,216,195,0.85); stroke-width: 0.6; }
 
 .sahne-ipucu {
   position: relative; margin-top: 46px;
@@ -1745,8 +1792,8 @@ const CSS_METNI = `
 .z-bascik { fill: #CBBC98; opacity: 0.9; }
 .z-tepecik { fill: currentColor; opacity: 0.8; }
 .muhur-zambak { color: var(--krem); }
-.muhur-zambak .z-tepal { fill: #FFFEFB; stroke: #DCD0B6; stroke-width: 0.8; opacity: 1; }
-.muhur-zambak .z-tepal-dis { fill: #F4EEE0; opacity: 1; }
+.muhur-zambak .z-tepal { fill: #FFFFFF; stroke: #DCD0B6; stroke-width: 0.75; opacity: 1; }
+.muhur-zambak .z-tepal-dis { fill: #FAF6EC; opacity: 1; }
 .muhur-zambak .z-bogaz { fill: #E2D7C0; opacity: 0.5; }
 .muhur-zambak .z-bascik { fill: #CDBF9E; }
 
@@ -1902,7 +1949,34 @@ const CSS_METNI = `
 
 /* Form -------------------------------------------------------------- */
 .katilim { max-width: 640px; text-align: center; }
-.form { text-align: left; margin-top: 30px; }
+/* form ortalanır; etiketler ve girilen metin de ortalı durur ki sayfanın
+   simetrisi bozulmasın */
+.form { text-align: center; margin: 30px auto 0; max-width: 440px; }
+.alan-etiket { text-align: center; }
+.form input, .form textarea { text-align: center; padding: 13px 6px; }
+.form textarea { text-align: center; resize: vertical; }
+
+/* kişi sayısı sayacı */
+.sayac-alan { margin-bottom: 26px; }
+.sayac {
+  display: flex; align-items: center; justify-content: center; gap: 22px;
+  padding: 6px 0;
+}
+.sayac-dugme {
+  width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--govde-yazi); font-size: 19px; line-height: 1;
+  color: var(--zeytin); background: #FFFFFF;
+  border: 1px solid rgba(214,202,178,0.95);
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.sayac-dugme:hover:not(:disabled) { background: var(--zeytin); color: #FFFFFF; border-color: var(--zeytin); }
+.sayac-dugme:disabled { opacity: 0.35; cursor: default; }
+.sayac-deger {
+  min-width: 52px; text-align: center;
+  font-family: var(--baslik-yazi); font-weight: 300; font-size: 34px;
+  font-variant-numeric: tabular-nums; color: var(--murekkep);
+}
 .form-satir { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .alan { display: block; margin-bottom: 22px; }
 .alan-etiket {
