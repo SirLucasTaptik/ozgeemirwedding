@@ -92,7 +92,7 @@ function DantelAyrac() {
 /* Zarf — açılış sahnesi                                                */
 /* ------------------------------------------------------------------ */
 
-function Zarf({ onAcildi }) {
+function Zarf({ onAcildi }: { onAcildi: () => void }) {
   const [asama, setAsama] = useState(0); // 0 kapalı · 1 mühür kırıldı · 2 kapak açık · 3 kart çıktı · 4 sahne gidiyor
 
   const ac = () => {
