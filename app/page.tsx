@@ -92,6 +92,7 @@ const PROGRAM = [
 function ZambakMuhru({ boyut = 96 }: { boyut?: number }) {
   return (
     <svg width={boyut} height={boyut} viewBox="-50 -50 100 100" aria-hidden="true">
+      <SedefTanimi />
       <circle className="muhur-zemin" cx="0" cy="0" r="44" />
       <circle className="muhur-cizgi" cx="0" cy="0" r="36" />
       <g className="muhur-zambak" transform="translate(0 4) scale(0.62)">
@@ -595,6 +596,21 @@ function KoseSusu({ kose }: { kose: Kose }) {
   );
 }
 
+/** İncilerin sedef parlaklığı. İnci çizen her SVG bunu kendi içine alır ki
+    tanım her koşulda çözülsün. */
+function SedefTanimi() {
+  return (
+    <defs>
+      <radialGradient id="mgInci" cx="34%" cy="27%" r="72%">
+        <stop offset="0%" stopColor="#FFFFFF" />
+        <stop offset="38%" stopColor="#FFFFFF" />
+        <stop offset="72%" stopColor="#FAF6EE" />
+        <stop offset="100%" stopColor="#E4DAC6" />
+      </radialGradient>
+    </defs>
+  );
+}
+
 /**
  * Ö & E madalyonu. Dıştan içe: ince çerçeve çizgisi, çevresini dolanan inci
  * kuşağı, kesintili iç çizgi, altta çaprazlanan iki zambak filizi ve ortada
@@ -605,12 +621,14 @@ function Monogram({ boyut = 120 }: { boyut?: number }) {
 
   return (
     <svg className="monogram" width={boyut} height={boyut} viewBox="-64 -64 128 128" aria-hidden="true">
+      <SedefTanimi />
+
       {/* dış çerçeve */}
       <ellipse className="mg-halka mg-dis" cx="0" cy="0" rx="58" ry="62" />
 
       {/* inci kuşağı */}
       {inciler.map((a) => (
-        <circle key={a} className="mg-inci" cx="0" cy="-53.5" r="2.5" transform={`rotate(${a})`} />
+        <circle key={a} className="mg-inci" cx="0" cy="-53" r="3.6" transform={`rotate(${a})`} />
       ))}
 
       {/* iç çizgi: altta ve üstte süs için açık bırakılmış */}
@@ -655,12 +673,13 @@ function Monogram({ boyut = 120 }: { boyut?: number }) {
 function Pul() {
   return (
     <svg className="pul" viewBox="0 0 60 74" aria-hidden="true">
+      <SedefTanimi />
       <rect className="pul-zemin" x="3" y="3" width="54" height="68" rx="1" />
       <rect className="pul-cerceve" x="8" y="8" width="44" height="58" />
       <g transform="translate(30 40) scale(0.3)" className="pul-monogram">
         <ellipse className="mg-halka mg-ic" cx="0" cy="0" rx="52" ry="56" />
         {Array.from({ length: 24 }, (_, i) => (i * 360) / 24).map((a) => (
-          <circle key={a} className="mg-inci" cx="0" cy="-46" r="3.4" transform={`rotate(${a})`} />
+          <circle key={a} className="mg-inci" cx="0" cy="-46" r="4.2" transform={`rotate(${a})`} />
         ))}
         <text className="mg-harf mg-sol" x="-15" y="10">
           Ö
@@ -1198,7 +1217,7 @@ export default function Davetiye() {
           <KoseZambak kose="sol-alt" boyut="buyuk" />
           <KoseZambak kose="sag-alt" boyut="orta" />
           <div className="giris-metin">
-            <Monogram boyut={132} />
+            <Monogram boyut={196} />
             <h1 className="isimler">
               <span className="isim-blok">
                 <span className="isim">Özge</span>
@@ -1265,8 +1284,8 @@ export default function Davetiye() {
             <KoseSusu kose="sol-alt" />
             <KoseSusu kose="sag-alt" />
             <p className="serit-yazi">Sizi aramızda görmekten mutluluk duyarız</p>
-          <DantelKenar yon="ust" desen="dantelKrem" />
           </div>
+          <DantelKenar yon="ust" desen="dantelKrem" />
         </section>
 
         {/* — Program — */}
@@ -1588,8 +1607,8 @@ const CSS_METNI = `
 .mg-ic { stroke-width: 1.4; opacity: 0.85; }
 .mg-tuy { stroke-width: 0.5; opacity: 0.42; }
 .mg-inci {
-  fill: #FFFFFF; stroke: rgba(214,202,178,0.95); stroke-width: 0.45;
-  filter: drop-shadow(0 0.6px 0.8px rgba(160,142,110,0.3));
+  fill: url(#mgInci); stroke: rgba(216,203,178,0.85); stroke-width: 0.4;
+  filter: drop-shadow(0 0.9px 1.1px rgba(150,130,98,0.38));
 }
 .mg-dal { fill: none; stroke: currentColor; stroke-width: 0.8; opacity: 0.55; }
 .mg-yaprak { fill: currentColor; opacity: 0.28; }
@@ -1803,7 +1822,7 @@ const CSS_METNI = `
   overflow: hidden; background: var(--sut);
 }
 .serit, .lokasyon { overflow: hidden; position: relative; }
-.serit { min-height: 46vh; padding: 90px 24px; display: grid; place-items: center; background: var(--kagit); }
+.serit { padding: 74px 24px 116px; display: grid; place-items: center; background: var(--kagit); }
 .lokasyon { background: var(--sut); }
 .giris-metin { position: relative; text-align: center; color: var(--murekkep); padding: 0 26px; }
 .isimler {
@@ -1825,7 +1844,7 @@ const CSS_METNI = `
 }
 
 /* Bölümler ---------------------------------------------------------- */
-.bolum { max-width: 1020px; margin: 0 auto; padding: 100px 26px; }
+.bolum { max-width: 1020px; margin: 0 auto; padding: 78px 26px; }
 .orta { text-align: center; }
 .belir { opacity: 0; transform: translateY(24px); transition: opacity 950ms ease, transform 950ms ease; }
 .belir-acik { opacity: 1; transform: none; }
@@ -1873,7 +1892,7 @@ const CSS_METNI = `
 .program-baslik { font-size: 17px; }
 .program-detay { font-size: 13px; color: var(--zeytin); }
 
-.lokasyon { position: relative; min-height: 88vh; display: grid; place-items: center; text-align: center; }
+.lokasyon { position: relative; padding: 92px 0 0; display: grid; place-items: center; text-align: center; }
 .lokasyon-metin { position: relative; color: var(--murekkep); padding: 0 26px; max-width: 560px; }
 .lokasyon-ad {
   font-family: var(--baslik-yazi); font-weight: 300; font-style: italic;
@@ -2024,7 +2043,8 @@ const CSS_METNI = `
     .form-satir, .secim-kutulari { grid-template-columns: 1fr; }
   .form-satir { gap: 0; }
   .secim-kutulari { gap: 10px; }
-  .bolum { padding: 72px 22px; }
+  .bolum { padding: 54px 22px; }
+  .serit { padding: 52px 20px 88px; }
   .program li { grid-template-columns: 72px 1fr; gap: 2px 18px; }
 }
 
