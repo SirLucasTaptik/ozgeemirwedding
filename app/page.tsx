@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
 /**
@@ -14,6 +16,37 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
  * Bağımlılık yoktur, yalnızca React kullanır. Next.js içinde dosyanın en başına
  * "use client" satırını ekleyin.
  */
+
+type Yon = "ust" | "alt";
+type Kose = "sol-ust" | "sag-ust" | "sol-alt" | "sag-alt";
+
+type SerpmeYeri = {
+  ust: string;
+  sol?: string;
+  sag?: string;
+  boyut: number;
+  aci: number;
+  saydam: number;
+};
+
+type FormAlanlari = {
+  adSoyad: string;
+  eposta: string;
+  telefon: string;
+  katilim: "" | "evet" | "hayir";
+  kisiSayisi: number;
+  not: string;
+  website: string;
+};
+
+/* Fon görselleri. A11 fotoğrafları public/gorseller altındadır; Bozcaada
+   görselini kendi çekiminizle değiştirebilirsiniz. */
+const FON = {
+  su: "/gorseller/a11-havuz.jpg",
+  otel: "/gorseller/a11-gun-batimi.jpg",
+  bozcaada:
+    "https://images.pexels.com/photos/34482767/pexels-photo-34482767.jpeg?auto=compress&cs=tinysrgb&w=1600",
+};
 
 const DUGUN_TARIHI = new Date("2026-09-20T18:30:00+03:00");
 
@@ -56,7 +89,7 @@ const PROGRAM = [
 /* Kabartma zambak mührü                                                */
 /* ------------------------------------------------------------------ */
 
-function ZambakMuhru({ boyut = 96 }) {
+function ZambakMuhru({ boyut = 96 }: { boyut?: number }) {
   return (
     <svg width={boyut} height={boyut} viewBox="-50 -50 100 100" aria-hidden="true">
       <circle className="muhur-zemin" cx="0" cy="0" r="44" />
@@ -88,7 +121,13 @@ const KAGIT_RENGI = "#F7F4ED";
  * bağlayan pikolu köprüler, kalın gipe ipliğiyle çizilmiş fisto kenar ve
  * en uçta piko halkaları. Karo 120 × 74 birimdir.
  */
-function dantelKarosu(id, iplik, tul, pikoRenk, olcek = 1) {
+function dantelKarosu(
+  id: string,
+  iplik: string,
+  tul: string,
+  pikoRenk: string,
+  olcek = 1
+) {
   const gipe = iplik;
   const fistolar = [0, 60];
 
@@ -100,7 +139,7 @@ function dantelKarosu(id, iplik, tul, pikoRenk, olcek = 1) {
   }
 
   // beş yapraklı gül motifi
-  const gul = (cx, cy, olcek) => (
+  const gul = (cx: number, cy: number, olcek: number) => (
     <g transform={`translate(${cx} ${cy}) scale(${olcek})`}>
       {[0, 1, 2, 3, 4].map((i) => (
         <path
@@ -130,7 +169,7 @@ function dantelKarosu(id, iplik, tul, pikoRenk, olcek = 1) {
   );
 
   // damarlı yaprak demeti
-  const yaprakDemeti = (cx, cy) => (
+  const yaprakDemeti = (cx: number, cy: number) => (
     <g transform={`translate(${cx} ${cy})`}>
       {[-42, 0, 42].map((a) => (
         <g key={a} transform={`rotate(${a})`}>
@@ -268,8 +307,28 @@ function DantelTanimlari() {
   );
 }
 
+/** Bölüm arkasına serilen, krem tona çekilmiş fon görseli. */
+function FonGorsel({ src }: { src: string }) {
+  return (
+    <div className="fon" aria-hidden="true">
+      <img className="fon-gorsel" src={src} alt="" />
+      <span className="fon-tul" />
+    </div>
+  );
+}
+
 /** Bir kenarı kaplayan dantel bordür. */
-function DantelKenar({ yon = "ust", sinif = "", desen = "dantelBeyaz", yukseklik = 104 }) {
+function DantelKenar({
+  yon = "ust",
+  sinif = "",
+  desen = "dantelBeyaz",
+  yukseklik = 104,
+}: {
+  yon?: Yon;
+  sinif?: string;
+  desen?: string;
+  yukseklik?: number;
+}) {
   return (
     <svg
       className={`dantel dantel-${yon} ${sinif}`}
@@ -337,7 +396,7 @@ function zambakCicegi(olcek = 1) {
 }
 
 /** Tek bir zambak dalı: sap, mızrak biçimli yapraklar, gonca ve açmış çiçek. */
-function zambakDali(anahtar, ekSinif = "") {
+function zambakDali(anahtar: string | number, ekSinif = "") {
   return (
     <g key={anahtar} className={ekSinif}>
       <path className="z-sap" d="M0 190 C 4 150, -2 108, 0 62" />
@@ -419,7 +478,13 @@ function ZambakAyrac() {
 }
 
 /** Bölüm köşelerine yaslanan büyük zambak dalı. */
-function KoseZambak({ kose = "sag-ust", boyut = "orta" }) {
+function KoseZambak({
+  kose = "sag-ust",
+  boyut = "orta",
+}: {
+  kose?: Kose;
+  boyut?: "orta" | "buyuk";
+}) {
   return (
     <svg
       className={`kose-zambak kose-${kose} kose-${boyut}`}
@@ -432,7 +497,7 @@ function KoseZambak({ kose = "sag-ust", boyut = "orta" }) {
 }
 
 /** Bölümlere serpiştirilen tek tek zambak çiçekleri. */
-function ZambakSerpme({ yerler }) {
+function ZambakSerpme({ yerler }: { yerler: SerpmeYeri[] }) {
   return (
     <>
       {yerler.map((y, i) => (
@@ -459,7 +524,7 @@ function ZambakSerpme({ yerler }) {
 }
 
 /** Bölüm arkasında soluk duran büyük zambak filigranı. */
-function ZambakFiligran({ taraf = "sag" }) {
+function ZambakFiligran({ taraf = "sag" }: { taraf?: "sol" | "sag" }) {
   return (
     <svg className={`filigran filigran-${taraf}`} viewBox="-70 0 140 200" aria-hidden="true">
       {zambakDali("f")}
@@ -472,7 +537,7 @@ function ZambakFiligran({ taraf = "sag" }) {
 /* ------------------------------------------------------------------ */
 
 /** Kalın–ince çift çizgi: eski matbaa davetiyelerinin ayraç çizgisi. */
-function CiftCizgi({ sinif = "" }) {
+function CiftCizgi({ sinif = "" }: { sinif?: string }) {
   return (
     <div className={`cift-cizgi ${sinif}`} aria-hidden="true">
       <span className="cizgi-kalin" />
@@ -482,10 +547,18 @@ function CiftCizgi({ sinif = "" }) {
 }
 
 /** İki yanı beyaz incili, ortasında O & E monogramı olan ayraç. */
-function InciDizisi({ sinif = "", logo = true, logoBoyut = 64 }) {
+function InciDizisi({
+  sinif = "",
+  logo = true,
+  logoBoyut = 64,
+}: {
+  sinif?: string;
+  logo?: boolean;
+  logoBoyut?: number;
+}) {
   const taneler = [10, 16, 22, 28];
 
-  const yarim = (ters) =>
+  const yarim = (ters: boolean) =>
     (ters ? [...taneler].reverse() : taneler).map((cap, i) => (
       <span key={i} className="inci-tane" style={{ width: cap, height: cap }} />
     ));
@@ -502,7 +575,7 @@ function InciDizisi({ sinif = "", logo = true, logoBoyut = 64 }) {
 }
 
 /** Köşelere oturan kıvrımlı gravür süsü. */
-function KoseSusu({ kose }) {
+function KoseSusu({ kose }: { kose: Kose }) {
   return (
     <svg className={`kose-susu susu-${kose}`} viewBox="0 0 60 60" aria-hidden="true">
       <path d="M2 2 H26" />
@@ -520,7 +593,7 @@ function KoseSusu({ kose }) {
  * kuşağı, kesintili iç çizgi, altta çaprazlanan iki zambak filizi ve ortada
  * kavuşan baş harfler.
  */
-function Monogram({ boyut = 120 }) {
+function Monogram({ boyut = 120 }: { boyut?: number }) {
   const inciler = Array.from({ length: 28 }, (_, i) => (i * 360) / 28);
 
   return (
@@ -540,13 +613,13 @@ function Monogram({ boyut = 120 }) {
       />
       <path className="mg-halka mg-tuy" d="M0 -40 A 36 40 0 0 1 0 40" />
 
-      {/* altta çaprazlanan iki zambak filizi */}
+      {/* altta çaprazlanan iki zambak filizi — halkanın içinde kalır */}
       {[-1, 1].map((y) => (
         <g key={y} transform={`scale(${y} 1)`}>
-          <path className="mg-dal" d="M2 50 C -12 47, -22 39, -27 28" />
-          <path className="mg-yaprak" d="M-9 47 C -15 43, -19 36, -18 29 C -12 33, -9 40, -9 47 Z" />
-          <path className="mg-yaprak" d="M-20 40 C -24 34, -25 27, -22 21 C -18 26, -18 34, -20 40 Z" />
-          <g transform="translate(-30 22) scale(0.3)">
+          <path className="mg-dal" d="M1 42 C -9 40, -17 33, -21 24" />
+          <path className="mg-yaprak" d="M-7 39 C -12 36, -15 30, -14 24 C -9 27, -7 33, -7 39 Z" />
+          <path className="mg-yaprak" d="M-16 33 C -19 28, -20 23, -18 18 C -15 22, -15 28, -16 33 Z" />
+          <g transform="translate(-24 19) scale(0.24)">
             {[-120, 0, 120].map((a) => (
               <path key={a} className="mg-tepal mg-tepal-dis" transform={`rotate(${a})`} d={TEPAL_DIS} />
             ))}
@@ -558,13 +631,13 @@ function Monogram({ boyut = 120 }) {
       ))}
 
       {/* baş harfler */}
-      <text className="mg-harf mg-sol" x="-19" y="12">
+      <text className="mg-harf mg-sol" x="-15" y="6">
         Ö
       </text>
-      <text className="mg-ve" x="0" y="6">
+      <text className="mg-ve" x="0" y="2">
         &amp;
       </text>
-      <text className="mg-harf mg-sag" x="19" y="12">
+      <text className="mg-harf mg-sag" x="15" y="6">
         E
       </text>
     </svg>
@@ -616,7 +689,7 @@ function Damga() {
 /* Zarf — açılış sahnesi                                                */
 /* ------------------------------------------------------------------ */
 
-function Zarf({ onAcildi }) {
+function Zarf({ onAcildi }: { onAcildi: () => void }) {
   const [asama, setAsama] = useState(0); // 0 kapalı · 1 mühür kırıldı · 2 kapak açık · 3 kart çıktı · 4 sahne gidiyor
 
   const ac = () => {
@@ -748,8 +821,18 @@ function GeriSayim() {
 /* Görünürlükte belirme                                                 */
 /* ------------------------------------------------------------------ */
 
-function Belir({ children, className = "", as: Etiket = "div", id }) {
-  const ref = useRef(null);
+function Belir({
+  children,
+  className = "",
+  as: Etiket = "div",
+  id,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  as?: React.ElementType;
+  id?: string;
+}) {
+  const ref = useRef<HTMLElement | null>(null);
   const [gorundu, setGorundu] = useState(false);
 
   useEffect(() => {
@@ -779,7 +862,7 @@ function Belir({ children, className = "", as: Etiket = "div", id }) {
 /* Katılım formu                                                        */
 /* ------------------------------------------------------------------ */
 
-const BOS_FORM = {
+const BOS_FORM: FormAlanlari = {
   adSoyad: "",
   eposta: "",
   telefon: "",
@@ -794,7 +877,7 @@ function KatilimFormu() {
   const [durum, setDurum] = useState("bekliyor");
   const [hataMetni, setHataMetni] = useState("");
 
-  const degistir = useCallback((alan, deger) => {
+  const degistir = useCallback(<A extends keyof FormAlanlari>(alan: A, deger: FormAlanlari[A]) => {
     setForm((o) => ({ ...o, [alan]: deger }));
   }, []);
 
@@ -818,11 +901,12 @@ function KatilimFormu() {
       }
       setDurum("tamam");
     } catch (hata) {
+      const mesaj = hata instanceof Error ? hata.message : "Kayıt tamamlanamadı.";
       setDurum("hata");
       setHataMetni(
-        hata.message === "Failed to fetch"
+        mesaj === "Failed to fetch"
           ? "Sunucuya ulaşılamadı. Yayındaki sitede tekrar deneyin."
-          : hata.message
+          : mesaj
       );
     }
   };
@@ -980,13 +1064,13 @@ function KatilimFormu() {
 const MUZIK_DOSYASI = "/muzik/beyaz-zambaklar.mp3";
 const SES_DUZEYI = 0.4;
 
-function MuzikCalar({ calsin }) {
-  const sesRef = useRef(null);
+function MuzikCalar({ calsin }: { calsin: boolean }) {
+  const sesRef = useRef<HTMLAudioElement | null>(null);
   const [acik, setAcik] = useState(false);
   const [kullanilabilir, setKullanilabilir] = useState(true);
 
   // sesi birden patlatmadan, iki saniyede yavaşça aç
-  const yumusakAc = useCallback((ses) => {
+  const yumusakAc = useCallback((ses: HTMLAudioElement) => {
     ses.volume = 0;
     let adim = 0;
     const zamanlayici = setInterval(() => {
@@ -1095,7 +1179,6 @@ export default function Davetiye() {
           <KoseZambak kose="sol-alt" boyut="buyuk" />
           <KoseZambak kose="sag-alt" boyut="orta" />
           <div className="giris-metin">
-            <span className="koordinat">41°01′ K · 29°00′ D — Üsküdar</span>
             <Monogram boyut={132} />
             <h1 className="isimler">
               <span className="isim-blok">
@@ -1108,7 +1191,7 @@ export default function Davetiye() {
                 <span className="aile">Uyanık Ailesi</span>
               </span>
             </h1>
-            <InciDizisi logoBoyut={84} />
+            <InciDizisi logo={false} />
             <p className="giris-tarih">20 EYLÜL 2026 · PAZAR · 18.30</p>
             <p className="giris-yer">A11 Hotel Bosphorus, Üsküdar</p>
           </div>
@@ -1117,19 +1200,21 @@ export default function Davetiye() {
         </header>
 
         {/* — Geri sayım — */}
-        <Belir as="section" className="bolum orta">
+        <Belir as="section" className="bolum orta fonlu">
+          <FonGorsel src={FON.su} />
           <ZambakFiligran taraf="sol" />
           <ZambakFiligran taraf="sag" />
           <KoseZambak kose="sag-ust" boyut="orta" />
           <ZambakSerpme yerler={SERPME.gerisayim} />
-          <p className="ust-etiket">Mutlu güne son</p>
+          <p className="ust-etiket buyuk-etiket">Mutlu güne son</p>
           <InciDizisi sinif="bolum-inci" />
           <GeriSayim />
           <ZambakAyrac />
         </Belir>
 
         {/* — Hikâye: Bozcaada — */}
-        <Belir as="section" className="bolum hikaye-bolum">
+        <Belir as="section" className="bolum hikaye-bolum fonlu">
+          <FonGorsel src={FON.bozcaada} />
           <KoseZambak kose="sag-ust" boyut="orta" />
           <ZambakSerpme yerler={SERPME.hikaye} />
           <div className="ikili-metin">
@@ -1185,7 +1270,8 @@ export default function Davetiye() {
         </Belir>
 
         {/* — Lokasyon — */}
-        <Belir as="section" className="lokasyon">
+        <Belir as="section" className="lokasyon fonlu">
+          <FonGorsel src={FON.otel} />
           <DantelKenar yon="alt" desen="dantelKrem" />
           <KoseZambak kose="sag-ust" boyut="buyuk" />
           <ZambakSirasi />
@@ -1450,6 +1536,28 @@ const CSS_METNI = `
 .susu-sol-alt { bottom: 3px; left: 3px; transform: scaleY(-1); }
 .susu-sag-alt { bottom: 3px; right: 3px; transform: scale(-1); }
 
+/* Fon görselleri ----------------------------------------------------- */
+/* Fotoğraf önce griye indirilip krem tona boyanır, sonra üstüne sütbeyazı
+   bir tül serilir. Böylece görsel yazının okunmasını hiç engellemez. */
+.fon { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.fon-gorsel {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: grayscale(1) sepia(0.55) saturate(1.35) brightness(1.08) contrast(0.88);
+  opacity: 0.42;
+}
+.fon-tul {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(253,251,246,0.9) 0%, rgba(253,251,246,0.62) 40%, rgba(253,251,246,0.92) 100%);
+}
+.fonlu { position: relative; }
+/* fonlu bölümlerde içerik biraz daha nefes alsın */
+.fonlu.bolum { padding-top: 118px; padding-bottom: 118px; }
+.hikaye-bolum { max-width: 680px; margin: 0 auto; text-align: center; }
+.hikaye-bolum .ikili-metin { display: flex; flex-direction: column; align-items: center; }
+.lokasyon .fon { z-index: 0; }
+.lokasyon-metin, .lokasyon .kose-zambak, .lokasyon .zambak-sirasi { z-index: 1; }
+
 /* Ö & E madalyonu ---------------------------------------------------- */
 .monogram { display: block; margin: 0 auto; color: var(--zeytin); overflow: visible; }
 .mg-halka { fill: none; stroke: currentColor; }
@@ -1466,13 +1574,13 @@ const CSS_METNI = `
 .mg-tepal-dis { fill: #F7F2E6; }
 .mg-harf {
   fill: currentColor; font-family: var(--baslik-yazi); font-style: italic;
-  font-weight: 300; font-size: 40px; text-anchor: middle;
+  font-weight: 300; font-size: 31px; text-anchor: middle;
 }
 .mg-sol { text-anchor: end; }
 .mg-sag { text-anchor: start; }
 .mg-ve {
   fill: currentColor; font-family: var(--baslik-yazi); font-style: italic;
-  font-size: 17px; text-anchor: middle; opacity: 0.6;
+  font-size: 14px; text-anchor: middle; opacity: 0.6;
 }
 
 /* İsim blokları ve aile adları --------------------------------------- */
@@ -1512,6 +1620,13 @@ const CSS_METNI = `
 .inci-dizisi .monogram { flex: 0 0 auto; margin: 0 4px; color: var(--zeytin); }
 .inci-dizisi .monogram .mg-halka { stroke: rgba(200,186,158,0.95); }
 
+/* geri sayımın üstündeki büyük etiket */
+.buyuk-etiket {
+  font-size: clamp(15px, 3vw, 26px) !important;
+  letter-spacing: 0.34em !important;
+  color: var(--murekkep) !important;
+  margin-bottom: 30px !important;
+}
 .bolum-inci { margin: 26px auto 30px; }
 .form-inci { margin: 18px auto 6px; max-width: 300px; }
 .dizi-cizgi {
@@ -1619,7 +1734,7 @@ const CSS_METNI = `
 .filigran-sol { left: -70px; }
 .filigran-sag { right: -70px; transform: translateY(-50%) scaleX(-1); }
 .bolum { position: relative; overflow: hidden; }
-.bolum > *:not(.filigran):not(.serpme):not(.kose-zambak) { position: relative; z-index: 1; }
+.bolum > *:not(.filigran):not(.serpme):not(.kose-zambak):not(.fon) { position: relative; z-index: 1; }
 
 /* Ayraç çizgisi */
 .ayrac-cizgi { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(224,213,190,0.9), transparent); }
