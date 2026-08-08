@@ -311,7 +311,14 @@ function DantelTanimlari() {
 function FonGorsel({ src }: { src: string }) {
   return (
     <div className="fon" aria-hidden="true">
-      <img className="fon-gorsel" src={src} alt="" />
+      <img
+        className="fon-gorsel"
+        src={src}
+        alt=""
+        onError={(e) => {
+          (e.currentTarget as HTMLImageElement).style.display = "none";
+        }}
+      />
       <span className="fon-tul" />
     </div>
   );
@@ -644,14 +651,26 @@ function Monogram({ boyut = 120 }: { boyut?: number }) {
   );
 }
 
-/** Tırtıklı kenarlı eski usul pul, üzerinde zambak gravürü. */
+/** Tırtıklı kenarlı eski usul pul, üzerinde çiftin madalyonu. */
 function Pul() {
   return (
     <svg className="pul" viewBox="0 0 60 74" aria-hidden="true">
       <rect className="pul-zemin" x="3" y="3" width="54" height="68" rx="1" />
       <rect className="pul-cerceve" x="8" y="8" width="44" height="58" />
-      <g transform="translate(30 44) scale(0.42)" className="pul-zambak">
-        {zambakCicegi(1)}
+      <g transform="translate(30 40) scale(0.3)" className="pul-monogram">
+        <ellipse className="mg-halka mg-ic" cx="0" cy="0" rx="52" ry="56" />
+        {Array.from({ length: 24 }, (_, i) => (i * 360) / 24).map((a) => (
+          <circle key={a} className="mg-inci" cx="0" cy="-46" r="3.4" transform={`rotate(${a})`} />
+        ))}
+        <text className="mg-harf mg-sol" x="-15" y="10">
+          Ö
+        </text>
+        <text className="mg-ve" x="0" y="6">
+          &amp;
+        </text>
+        <text className="mg-harf mg-sag" x="15" y="10">
+          E
+        </text>
       </g>
       <text className="pul-yazi" x="30" y="16">
         TÜRKİYE
@@ -1375,7 +1394,7 @@ const CSS_METNI = `
 .asama-4 { opacity: 0; visibility: hidden; }
 
 .zarf {
-  position: relative; width: min(84vw, 400px); aspect-ratio: 1 / 0.7;
+  position: relative; width: min(92vw, 540px); aspect-ratio: 1 / 0.7;
   transform-style: preserve-3d;
   filter: drop-shadow(0 26px 40px rgba(120,104,76,0.24));
   transition: transform 900ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -1428,7 +1447,7 @@ const CSS_METNI = `
 }
 
 /* pul, posta damgası ve alıcı satırı */
-.zarf-pul { position: absolute; z-index: 6; top: 7%; right: 7%; width: clamp(36px, 9vw, 50px); }
+.zarf-pul { position: absolute; z-index: 6; top: 7%; right: 7%; width: clamp(46px, 11vw, 66px); }
 .zarf-damga { position: absolute; z-index: 6; top: 10%; right: 27%; width: clamp(46px, 12vw, 66px); opacity: 0.5; }
 .zarf-pul, .zarf-damga, .zarf-adres { transition: opacity 500ms ease; }
 .asama-2 .zarf-pul, .asama-3 .zarf-pul, .asama-4 .zarf-pul,
@@ -1439,7 +1458,12 @@ const CSS_METNI = `
 .pul-zemin { fill: #FDFBF6; stroke: rgba(196,182,156,0.9); stroke-width: 0.9; stroke-dasharray: 2.6 2.6; }
 .pul-cerceve { fill: none; stroke: rgba(196,182,156,0.85); stroke-width: 0.6; }
 .pul-yazi { fill: var(--zeytin); font-family: var(--govde-yazi); font-size: 6px; letter-spacing: 0.18em; text-anchor: middle; }
-.pul-zambak { color: #E6DCC6; }
+/* pulun üzerindeki O & E madalyonu */
+.pul-monogram { color: var(--zeytin); }
+.pul-monogram .mg-ic { stroke-width: 3; opacity: 0.7; }
+.pul-monogram .mg-inci { stroke-width: 1; }
+.pul-monogram .mg-harf { font-size: 40px; }
+.pul-monogram .mg-ve { font-size: 20px; }
 
 .damga { width: 100%; height: auto; display: block; color: var(--zeytin); }
 .dm-halka { fill: none; stroke: currentColor; stroke-width: 1.6; }
@@ -1542,17 +1566,16 @@ const CSS_METNI = `
 .fon { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
 .fon-gorsel {
   width: 100%; height: 100%; object-fit: cover; display: block;
-  filter: grayscale(1) sepia(0.55) saturate(1.35) brightness(1.08) contrast(0.88);
-  opacity: 0.42;
+  filter: grayscale(1) sepia(0.55) saturate(1.4) brightness(1.06) contrast(0.9);
+  opacity: 0.62;
 }
 .fon-tul {
   position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, rgba(253,251,246,0.9) 0%, rgba(253,251,246,0.62) 40%, rgba(253,251,246,0.92) 100%);
+    linear-gradient(180deg, rgba(253,251,246,0.86) 0%, rgba(253,251,246,0.5) 42%, rgba(253,251,246,0.88) 100%);
 }
 .fonlu { position: relative; }
-/* fonlu bölümlerde içerik biraz daha nefes alsın */
-.fonlu.bolum { padding-top: 118px; padding-bottom: 118px; }
+
 .hikaye-bolum { max-width: 680px; margin: 0 auto; text-align: center; }
 .hikaye-bolum .ikili-metin { display: flex; flex-direction: column; align-items: center; }
 .lokasyon .fon { z-index: 0; }
@@ -1650,9 +1673,11 @@ const CSS_METNI = `
 .muzik-dugme svg { width: 15px; height: 15px; fill: currentColor; }
 .muzik-dugme .dalga { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 @media (max-width: 780px) {
-  .isimler { flex-direction: column; gap: 4px; }
-  .isimler .ve { margin: 2px 0 0; align-self: center; }
-  .aile { margin-top: 8px; }
+  /* isimler dar ekranda da yan yana durur; punto ve boşluk küçülür */
+  .isimler { flex-direction: row; gap: 10px; flex-wrap: nowrap; }
+  .isimler .ve { font-size: 0.34em; margin-top: -0.2em; }
+  .isim { font-size: clamp(30px, 11vw, 56px); }
+  .aile { margin-top: 9px; font-size: 8px; letter-spacing: 0.16em; }
   .inci-dizisi { margin: 22px auto 20px; gap: 12px; }
   .muzik-dugme span { display: none; }
   .muzik-dugme { padding: 11px; right: 14px; bottom: 14px; }
