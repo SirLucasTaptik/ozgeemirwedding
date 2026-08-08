@@ -39,11 +39,11 @@ type FormAlanlari = {
   website: string;
 };
 
-/* Fon görselleri. A11 fotoğrafları public/gorseller altındadır; Bozcaada
-   görselini kendi çekiminizle değiştirebilirsiniz. */
+/* Fon görselleri. A11 fotoğrafları doğrudan public klasörünün içindedir;
+   Bozcaada görselini kendi çekiminizle değiştirebilirsiniz. */
 const FON = {
-  su: "/gorseller/a11-havuz.jpg",
-  otel: "/gorseller/a11-gun-batimi.jpg",
+  su: "/a11-havuz.jpg",
+  otel: "/a11-gun-batimi.jpg",
   bozcaada:
     "https://images.pexels.com/photos/34482767/pexels-photo-34482767.jpeg?auto=compress&cs=tinysrgb&w=1600",
 };
@@ -1052,7 +1052,7 @@ function KatilimFormu() {
 /**
  * Arka plan müziği: Ata Demirer & Melek Büyükçınar — Beyaz Zambaklar.
  *
- * Ses dosyası `public/muzik/beyaz-zambaklar.mp3` yolundadır.
+ * Ses dosyası doğrudan `public/beyaz-zambaklar.mp3` yolundadır.
  *
  * Tarayıcılar sesli otomatik oynatmayı engeller. Bu yüzden müzik ancak
  * ziyaretçi mühre dokunduğunda başlar — o dokunuş tarayıcı için geçerli bir
@@ -1061,7 +1061,7 @@ function KatilimFormu() {
  * Dosya, sayfa açılışını yavaşlatmasın diye önceden indirilmez; yalnızca zarf
  * açıldığında yüklenir.
  */
-const MUZIK_DOSYASI = "/muzik/beyaz-zambaklar.mp3";
+const MUZIK_DOSYASI = "/beyaz-zambaklar.mp3";
 const SES_DUZEYI = 0.4;
 
 function MuzikCalar({ calsin }: { calsin: boolean }) {
